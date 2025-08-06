@@ -49,6 +49,9 @@ namespace SEP490_BackendAPI
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+
+            var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+            builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
             
             var app = builder.Build();
 
