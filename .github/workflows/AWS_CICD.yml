@@ -23,7 +23,9 @@ jobs:
 
       # ZIP thư mục xuất bản
       - name: Zip publish folder
-        run: zip -r publish.zip ./publish
+        run: |
+          cd publish
+          zip -r ../publish.zip .
 
       # Deploy lên Elastic Beanstalk
       - name: Deploy to AWS Elastic Beanstalk
