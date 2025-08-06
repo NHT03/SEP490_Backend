@@ -19,7 +19,7 @@ jobs:
 
       # Build & Publish project
       - name: Build & Publish
-        run: dotnet publish -c Release -o ./publish
+        run: dotnet publish -c Release -o ./publish --self-contained false
 
       # ZIP thư mục xuất bản
       - name: Zip publish folder
