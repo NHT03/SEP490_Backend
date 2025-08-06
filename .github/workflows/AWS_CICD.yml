@@ -3,7 +3,7 @@ name: Deploy API to AWS Elastic Beanstalk
 on:
   push:
     branches:
-      - main   # Hoặc branch bạn muốn auto deploy
+      - master   # Hoặc branch bạn muốn auto deploy
 
 jobs:
   build-deploy:
