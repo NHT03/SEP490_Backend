@@ -3,7 +3,7 @@ name: Deploy API to AWS Elastic Beanstalk
 on:
   push:
     branches:
-      - master # Hoặc branch mà bạn muốn auto deploy
+      - deploy # Hoặc branch mà bạn muốn auto deploy
 
 jobs:
   build-deploy:
@@ -17,21 +17,23 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      # Khôi phục package nếu cần (optional nhưng best practice)
+      # Khôi phục package (dotnet restore), làm trong folder dự án
       - name: Dotnet Restore
+        working-directory: ./SEP490_BackendAPI
         run: dotnet restore
 
-      # Build & Publish project
+      # Build & Publish project trong folder dự án
       - name: Build & Publish
+        working-directory: ./SEP490_BackendAPI
         run: dotnet publish -c Release -o ./publish --self-contained false
 
-      # ZIP thư mục xuất bản, cần tách lệnh trong shell
+      # ZIP thư mục publish (lưu ý thư mục publish nằm trong SEP490_BackendAPI/publish)
       - name: Zip publish folder
         run: |
-          cd publish
-          zip -r ../publish.zip .
+          cd SEP490_BackendAPI/publish
+          zip -r ../../publish.zip .
 
-      # Deploy lên Elastic Beanstalk
+      # Deploy lên Elastic Beanstalk, file publish.zip ở root repo
       - name: Deploy to AWS Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
