@@ -40,7 +40,7 @@ namespace Infrastructure.UnitTests.OrderService
         private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
         private readonly Mock<LCFMSDBContext> _dbContextMock;
         private readonly Infrastructure.Services.Implements.OrderService _service;
-
+        private readonly Mock<Infrastructure.Services.IEmailService> _emailService = new Mock<Infrastructure.Services.IEmailService>();
         public SaleGetAllOrderTest()
         {
             _orderRepositoryMock = new Mock<IRepository<Order>>();
@@ -54,7 +54,7 @@ namespace Infrastructure.UnitTests.OrderService
             _roleRepositoryMock = new Mock<IRepository<Role>>();
             _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
             _dbContextMock = new Mock<LCFMSDBContext>(new DbContextOptions<LCFMSDBContext>());
-
+            _emailService = new Mock<Infrastructure.Services.IEmailService>();
             var claims = new List<Claim>
             {
                 new Claim("uid", Guid.NewGuid().ToString()) // Mock current user
@@ -75,7 +75,8 @@ namespace Infrastructure.UnitTests.OrderService
                 _breedCategoryRepositoryMock.Object,
                 _imageLivestockCircleRepositoryMock.Object,
                 _roleRepositoryMock.Object,
-                _dbContextMock.Object
+                _dbContextMock.Object,
+                _emailService.Object
             );
         }
 
@@ -109,9 +110,9 @@ namespace Infrastructure.UnitTests.OrderService
                 Customer = customer,
                 GoodUnitStock = 5,
                 BadUnitStock = 2,
-                TotalBill = 600,
+                //TotalBill = 600,
                 Status = OrderStatus.PENDING,
-               // AdditionalStatus = "InProgress",
+                // AdditionalStatus = "InProgress",
                 CreatedDate = DateTime.UtcNow.AddDays(-2),
                 PickupDate = DateTime.UtcNow.AddDays(1),
                 IsActive = true
@@ -125,9 +126,9 @@ namespace Infrastructure.UnitTests.OrderService
                 Customer = customer,
                 GoodUnitStock = 3,
                 BadUnitStock = 1,
-                TotalBill = 420,
+                //TotalBill = 420,
                 Status = OrderStatus.APPROVED,
-               // AdditionalStatus = "Completed",
+                // AdditionalStatus = "Completed",
                 CreatedDate = DateTime.UtcNow.AddDays(-1),
                 PickupDate = DateTime.UtcNow.AddDays(2),
                 IsActive = true
@@ -151,7 +152,7 @@ namespace Infrastructure.UnitTests.OrderService
             };
 
             // Act
-            var result = await _service.SaleGetAllOrder(request);
+            var result = await _service.SaleGetPaginatedOrderList(request);
 
             // Assert
             Assert.False(result.Succeeded, $"Succeeded is false. Message: {result.Message}, Errors: {string.Join(", ", result.Errors ?? new List<string>())}");
@@ -173,7 +174,7 @@ namespace Infrastructure.UnitTests.OrderService
             // No request object
 
             // Act
-            var result = await _service.SaleGetAllOrder(null);
+            var result = await _service.SaleGetPaginatedOrderList(null);
 
             // Assert
             Assert.False(result.Succeeded);
@@ -188,7 +189,7 @@ namespace Infrastructure.UnitTests.OrderService
             var request = new ListingRequest { PageIndex = 0, PageSize = 10 };
 
             // Act
-            var result = await _service.SaleGetAllOrder(request);
+            var result = await _service.SaleGetPaginatedOrderList(request);
 
             // Assert
             Assert.False(result.Succeeded);
@@ -203,7 +204,7 @@ namespace Infrastructure.UnitTests.OrderService
             var request = new ListingRequest { PageIndex = 1, PageSize = 0 };
 
             // Act
-            var result = await _service.SaleGetAllOrder(request);
+            var result = await _service.SaleGetPaginatedOrderList(request);
 
             // Assert
             Assert.False(result.Succeeded);
@@ -241,9 +242,9 @@ namespace Infrastructure.UnitTests.OrderService
                 Customer = customer,
                 GoodUnitStock = 5,
                 BadUnitStock = 2,
-                TotalBill = 600,
+                //TotalBill = 600,
                 Status = OrderStatus.PENDING,
-              //  AdditionalStatus = "InProgress",
+                //  AdditionalStatus = "InProgress",
                 CreatedDate = DateTime.UtcNow,
                 PickupDate = DateTime.UtcNow.AddDays(1),
                 IsActive = true
@@ -266,7 +267,7 @@ namespace Infrastructure.UnitTests.OrderService
             };
 
             // Act
-            var result = await _service.SaleGetAllOrder(request);
+            var result = await _service.SaleGetPaginatedOrderList(request);
 
             // Assert
             Assert.False(result.Succeeded);
@@ -305,9 +306,9 @@ namespace Infrastructure.UnitTests.OrderService
                 Customer = customer,
                 GoodUnitStock = 5,
                 BadUnitStock = 2,
-                TotalBill = 600,
+                //TotalBill = 600,
                 Status = OrderStatus.PENDING,
-               // AdditionalStatus = "InProgress",
+                // AdditionalStatus = "InProgress",
                 CreatedDate = DateTime.UtcNow,
                 PickupDate = DateTime.UtcNow.AddDays(1),
                 IsActive = true
@@ -330,7 +331,7 @@ namespace Infrastructure.UnitTests.OrderService
             };
 
             // Act
-            var result = await _service.SaleGetAllOrder(request);
+            var result = await _service.SaleGetPaginatedOrderList(request);
 
             // Assert
             Assert.False(result.Succeeded);
@@ -369,9 +370,9 @@ namespace Infrastructure.UnitTests.OrderService
                 Customer = customer,
                 GoodUnitStock = 5,
                 BadUnitStock = 2,
-                TotalBill = 600,
+                //TotalBill = 600,
                 Status = OrderStatus.PENDING,
-              //  AdditionalStatus = "InProgress",
+                //  AdditionalStatus = "InProgress",
                 CreatedDate = DateTime.UtcNow,
                 PickupDate = DateTime.UtcNow.AddDays(1),
                 IsActive = true
@@ -394,7 +395,7 @@ namespace Infrastructure.UnitTests.OrderService
             };
 
             // Act
-            var result = await _service.SaleGetAllOrder(request);
+            var result = await _service.SaleGetPaginatedOrderList(request);
 
             // Assert
             Assert.False(result.Succeeded);

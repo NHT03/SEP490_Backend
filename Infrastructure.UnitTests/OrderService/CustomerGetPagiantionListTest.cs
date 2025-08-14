@@ -42,7 +42,7 @@ namespace Infrastructure.UnitTests.OrderService
         private readonly Mock<LCFMSDBContext> _dbContextMock;
         private readonly Infrastructure.Services.Implements.OrderService _service;
         private readonly Guid _currentUserId = Guid.NewGuid();
-
+        private readonly Mock<Infrastructure.Services.IEmailService> _emailService = new Mock<Infrastructure.Services.IEmailService>();
         public CustomerGetPagiantionListTest()
         {
             _orderRepositoryMock = new Mock<IRepository<Order>>();
@@ -56,7 +56,7 @@ namespace Infrastructure.UnitTests.OrderService
             _roleRepositoryMock = new Mock<IRepository<Role>>();
             _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
             _dbContextMock = new Mock<LCFMSDBContext>(new DbContextOptions<LCFMSDBContext>());
-
+            _emailService = new Mock<Infrastructure.Services.IEmailService>();
             var claims = new List<Claim>
             {
                 new Claim("uid", _currentUserId.ToString())
@@ -77,7 +77,8 @@ namespace Infrastructure.UnitTests.OrderService
                 _breedCategoryRepositoryMock.Object,
                 _imageLivestockCircleRepositoryMock.Object,
                 _roleRepositoryMock.Object,
-                _dbContextMock.Object
+                _dbContextMock.Object,
+                _emailService.Object
             );
         }
 
@@ -104,7 +105,7 @@ namespace Infrastructure.UnitTests.OrderService
                 },
                 GoodUnitStock = 5,
                 BadUnitStock = 2,
-                TotalBill = 1000,
+                //TotalBill = 1000,
                 Status = OrderStatus.PENDING,
                 CreatedDate = DateTime.UtcNow.AddDays(-2),
                 PickupDate = DateTime.UtcNow.AddDays(1),
@@ -124,7 +125,7 @@ namespace Infrastructure.UnitTests.OrderService
                 },
                 GoodUnitStock = 3,
                 BadUnitStock = 1,
-                TotalBill = 500,
+                //TotalBill = 500,
                 Status = OrderStatus.APPROVED,
                 CreatedDate = DateTime.UtcNow.AddDays(-1),
                 PickupDate = DateTime.UtcNow.AddDays(2),
@@ -227,7 +228,7 @@ namespace Infrastructure.UnitTests.OrderService
                 },
                 GoodUnitStock = 5,
                 BadUnitStock = 2,
-                TotalBill = 1000,
+                //TotalBill = 1000,
                 Status = OrderStatus.PENDING,
                 CreatedDate = DateTime.UtcNow,
                 PickupDate = DateTime.UtcNow.AddDays(1),
@@ -279,7 +280,7 @@ namespace Infrastructure.UnitTests.OrderService
                 },
                 GoodUnitStock = 5,
                 BadUnitStock = 2,
-                TotalBill = 1000,
+                //TotalBill = 1000,
                 Status = OrderStatus.PENDING,
                 CreatedDate = DateTime.UtcNow,
                 PickupDate = DateTime.UtcNow.AddDays(1),

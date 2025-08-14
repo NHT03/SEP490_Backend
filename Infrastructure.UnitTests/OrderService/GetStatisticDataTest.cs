@@ -40,6 +40,7 @@ namespace Infrastructure.UnitTests.OrderService
         private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
         private readonly Mock<LCFMSDBContext> _dbContextMock;
         private readonly Infrastructure.Services.Implements.OrderService _service;
+        private readonly Mock<Infrastructure.Services.IEmailService> _emailService = new Mock<Infrastructure.Services.IEmailService>();
 
         public GetStatisticDataTest()
         {
@@ -54,7 +55,7 @@ namespace Infrastructure.UnitTests.OrderService
             _roleRepositoryMock = new Mock<IRepository<Role>>();
             _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
             _dbContextMock = new Mock<LCFMSDBContext>(new DbContextOptions<LCFMSDBContext>());
-
+            _emailService = new Mock<Infrastructure.Services.IEmailService>();
             _service = new Infrastructure.Services.Implements.OrderService(
                 _orderRepositoryMock.Object,
                 _httpContextAccessorMock.Object,
@@ -66,7 +67,8 @@ namespace Infrastructure.UnitTests.OrderService
                 _breedCategoryRepositoryMock.Object,
                 _imageLivestockCircleRepositoryMock.Object,
                 _roleRepositoryMock.Object,
-                _dbContextMock.Object
+                _dbContextMock.Object,
+                _emailService.Object
             );
         }
 
@@ -100,7 +102,7 @@ namespace Infrastructure.UnitTests.OrderService
                 Status = StatusConstant.REQUESTED,
                 GoodUnitPrice = 100,
                 BadUnitPrice = 50,
-                TotalBill = 600,
+                //TotalBill = 600,
                 CreatedDate = DateTime.UtcNow.AddDays(-3),
                 IsActive = true
             };
@@ -114,7 +116,7 @@ namespace Infrastructure.UnitTests.OrderService
                 Status = StatusConstant.REQUESTED,
                 GoodUnitPrice = 120,
                 BadUnitPrice = 60,
-                TotalBill = 420,
+                //TotalBill = 420,
                 CreatedDate = DateTime.UtcNow.AddDays(-2),
                 IsActive = true
             };
@@ -206,7 +208,7 @@ namespace Infrastructure.UnitTests.OrderService
                 Status = StatusConstant.REQUESTED,
                 GoodUnitPrice = 100,
                 BadUnitPrice = 50,
-                TotalBill = 600,
+                //TotalBill = 600,
                 CreatedDate = DateTime.UtcNow.AddDays(-10), // Ngoài phạm vi
                 IsActive = true
             };

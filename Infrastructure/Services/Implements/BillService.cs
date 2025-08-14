@@ -586,6 +586,7 @@ namespace Infrastructure.Services.Implements
                     Note = bill.Note,
                     Total = bill.Total,
                     TypeBill = bill.TypeBill,
+                    DeliveryDate = bill.DeliveryDate,
                     Status = bill.Status,
                     Weight = bill.Weight,
                     IsActive = bill.IsActive,
@@ -841,6 +842,7 @@ namespace Infrastructure.Services.Implements
                         Name = bill.Name,
                         Note = bill.Note,
                         TypeBill = bill.TypeBill,
+                        DeliveryDate = bill.DeliveryDate,
                         Total = bill.Total,
                         Status = bill.Status,
                         Weight = bill.Weight,
@@ -1722,6 +1724,7 @@ namespace Infrastructure.Services.Implements
                     Note = request.Note,
                     Status = StatusConstant.REQUESTED,
                     TypeBill = TypeBill.FOOD,
+                    DeliveryDate = request.DeliveryDate,
                     Total = groupedFoodItems.Sum(x => x.TotalQuantity),
                     Weight = weight,
                     IsActive = true
@@ -1868,6 +1871,7 @@ namespace Infrastructure.Services.Implements
                     Note = request.Note,
                     Status = StatusConstant.REQUESTED,
                     TypeBill = TypeBill.MEDICINE,
+                    DeliveryDate = request.DeliveryDate,
                     Total = groupedMedicineItems.Sum(x => x.TotalQuantity),
                     Weight = 0,
                     IsActive = true
@@ -1939,6 +1943,7 @@ namespace Infrastructure.Services.Implements
             var bill = new Bill
             {
                 UserRequestId = request.UserRequestId,
+                DeliveryDate = request.DeliveryDate,
                 LivestockCircleId = request.LivestockCircleId,
                 Name = $"Yêu cầu giống - {DateTime.UtcNow}",
                 Note = request.Note,
@@ -2061,6 +2066,7 @@ namespace Infrastructure.Services.Implements
                 }
 
                 var bill = await _billRepository.GetByIdAsync(request.BillId);
+
                 if (bill == null || !bill.IsActive)
                 {
                     return new Response<bool>()
@@ -2070,7 +2076,7 @@ namespace Infrastructure.Services.Implements
                         Errors = new List<string> { "Hóa đơn không tồn tại hoặc không hoạt động" }
                     };
                 }
-
+                bill.DeliveryDate = request.DeliveryDate;
                 var existingItems = await _billItemRepository.GetQueryable(x => x.BillId == request.BillId && x.IsActive && x.FoodId.HasValue).ToListAsync(cancellationToken);
                 if (existingItems.Any() && existingItems.Any(x => !x.FoodId.HasValue))
                 {
@@ -2248,7 +2254,7 @@ namespace Infrastructure.Services.Implements
                         Errors = new List<string> { "Hóa đơn không tồn tại hoặc không hoạt động" }
                     };
                 }
-
+                bill.DeliveryDate = request.DeliveryDate;
                 var existingItems = await _billItemRepository.GetQueryable(x => x.BillId == request.BillId && x.IsActive && x.MedicineId.HasValue).ToListAsync(cancellationToken);
                 if (existingItems.Any() && existingItems.Any(x => !x.MedicineId.HasValue))
                 {
@@ -2587,6 +2593,7 @@ namespace Infrastructure.Services.Implements
                         Note = bill.Note,
                         Total = bill.Total,
                         TypeBill = bill.TypeBill,
+                        DeliveryDate = bill.DeliveryDate,
                         Status = bill.Status,
                         Weight = bill.Weight,
                         IsActive = bill.IsActive,
@@ -2761,6 +2768,7 @@ namespace Infrastructure.Services.Implements
                         Note = bill.Note,
                         Total = bill.Total,
                         TypeBill = bill.TypeBill,
+                        DeliveryDate = bill.DeliveryDate,
                         Status = bill.Status,
                         Weight = bill.Weight,
                         IsActive = bill.IsActive,
@@ -2941,6 +2949,7 @@ namespace Infrastructure.Services.Implements
                         Note = bill.Note,
                         Total = bill.Total,
                         TypeBill = bill.TypeBill,
+                        DeliveryDate = bill.DeliveryDate,
                         Status = bill.Status,
                         Weight = bill.Weight,
                         IsActive = bill.IsActive,
@@ -3123,6 +3132,7 @@ namespace Infrastructure.Services.Implements
                         Note = bill.Note,
                         Total = bill.Total,
                         TypeBill = bill.TypeBill,
+                        DeliveryDate = bill.DeliveryDate,
                         Status = bill.Status,
                         Weight = bill.Weight,
                         IsActive = bill.IsActive,

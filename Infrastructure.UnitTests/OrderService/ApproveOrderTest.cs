@@ -16,6 +16,7 @@ using Domain.Helper.Constants;
 using Entities.EntityModel;
 using Infrastructure.DBContext;
 using Infrastructure.Repository;
+using Infrastructure.Services;
 using Infrastructure.Services.Implements;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -37,6 +38,7 @@ namespace Infrastructure.UnitTests.OrderService
         private readonly Mock<IRepository<Breed>> _breedRepositoryMock;
         private readonly Mock<IRepository<ImageLivestockCircle>> _imageLivestockCircleRepositoryMock;
         private readonly Mock<IRepository<BreedCategory>> _breedCategoryRepositoryMock;
+        private readonly Mock<IEmailService> _emailService;
         private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
         private readonly Mock<LCFMSDBContext> _dbContextMock;
         private readonly Infrastructure.Services.Implements.OrderService _service;
@@ -54,7 +56,7 @@ namespace Infrastructure.UnitTests.OrderService
             _roleRepositoryMock = new Mock<IRepository<Role>>();
             _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
             _dbContextMock = new Mock<LCFMSDBContext>(new DbContextOptions<LCFMSDBContext>());
-
+            _emailService = new Mock<IEmailService>();
             var claims = new List<Claim>
             {
                 new Claim("uid", Guid.NewGuid().ToString())
@@ -75,7 +77,8 @@ namespace Infrastructure.UnitTests.OrderService
                 _breedCategoryRepositoryMock.Object,
                 _imageLivestockCircleRepositoryMock.Object,
                 _roleRepositoryMock.Object,
-                _dbContextMock.Object
+                _dbContextMock.Object,
+                _emailService.Object
             );
         }
 
@@ -125,7 +128,7 @@ namespace Infrastructure.UnitTests.OrderService
                 order.Status = OrderStatus.APPROVED;
                 order.GoodUnitPrice = 100;
                 order.BadUnitPrice = 50;
-                order.TotalBill = (order.GoodUnitStock * order.GoodUnitPrice) + (order.BadUnitStock * order.BadUnitPrice);
+               // order.TotalBill = (order.GoodUnitStock * order.GoodUnitPrice) + (order.BadUnitStock * order.BadUnitPrice);
             });
             _orderRepositoryMock.Setup(x => x.CommitAsync(default)).ReturnsAsync(1);
             _livestockCircleRepositoryMock.Setup(x => x.Update(livestockCircle)).Callback(() =>
@@ -258,7 +261,7 @@ namespace Infrastructure.UnitTests.OrderService
                 order.Status = OrderStatus.APPROVED;
                 order.GoodUnitPrice = 100;
                 order.BadUnitPrice = 50;
-                order.TotalBill = (order.GoodUnitStock * order.GoodUnitPrice) + (order.BadUnitStock * order.BadUnitPrice);
+                //order.TotalBill = (order.GoodUnitStock * order.GoodUnitPrice) + (order.BadUnitStock * order.BadUnitPrice);
             });
             _orderRepositoryMock.Setup(x => x.CommitAsync(default)).ReturnsAsync(1);
             _livestockCircleRepositoryMock.Setup(x => x.Update(livestockCircle)).Callback(() =>
@@ -285,7 +288,7 @@ namespace Infrastructure.UnitTests.OrderService
             Assert.Equal(OrderStatus.APPROVED, order.Status);
             Assert.Equal(100, order.GoodUnitPrice);
             Assert.Equal(50, order.BadUnitPrice);
-            Assert.Equal(600, order.TotalBill); // 5 * 100 + 2 * 50
+            //Assert.Equal(600, order.TotalBill); // 5 * 100 + 2 * 50
             //Assert.Equal(5, livestockCircle.GoodUnitNumber); // 10 - 5
             //Assert.Equal(3, livestockCircle.BadUnitNumber); // 5 - 2
         }
@@ -336,7 +339,7 @@ namespace Infrastructure.UnitTests.OrderService
                 order.Status = OrderStatus.APPROVED;
                 order.GoodUnitPrice = 100;
                 order.BadUnitPrice = 50;
-                order.TotalBill = (order.GoodUnitStock * order.GoodUnitPrice) + (order.BadUnitStock * order.BadUnitPrice);
+                //order.TotalBill = (order.GoodUnitStock * order.GoodUnitPrice) + (order.BadUnitStock * order.BadUnitPrice);
             });
             _orderRepositoryMock.Setup(x => x.CommitAsync(default)).ReturnsAsync(1);
             _livestockCircleRepositoryMock.Setup(x => x.Update(livestockCircle)).Callback(() =>
